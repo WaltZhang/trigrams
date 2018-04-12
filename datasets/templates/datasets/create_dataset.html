@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block head %}New Data set{% endblock %}
+
+{% block nav-title %}<h3>New&nbsp;Data&nbsp;set</h3>{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">Type</li>
+                        <li class="breadcrumb-item active">Upload</li>
+                        <li class="breadcrumb-item active">Preview</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="card-body">
+                <a class="nav-item nav-link" href="{% url 'datasets:upload' %}">
+                    <i class="fa fa-file"></i>&nbsp;File
+                </a>
+            </div>
+            <div class="card-body">
+                <a class="nav-item nav-link" href="{% url 'datasets:connector' %}">
+                    <i class="fa fa-database"></i>&nbsp;Database
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

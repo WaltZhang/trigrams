@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block head %}New Data set{% endblock %}
+
+{% block nav-title %}<h3>Connector</h3>{% endblock %}
+
+{% block linkblock %}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-5 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    {% block breadcrumb %}
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{% url 'datasets:import' %}">Type</a></li>
+                                <li class="breadcrumb-item">Connector</li>
+                                <li class="breadcrumb-item active">Query</li>
+                            </ol>
+                        </nav>
+                    {% endblock %}
+                </div>
+                <div class="card-body">
+                    <div class="connector-list"></div>
+                </div>
+                <div class="card-footer">
+                    <a id="conn-select" disabled="false" class="btn btn-primary">{% trans 'Select' %}</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 col-sm-12">
+            <div class="card">
+                <div class="col-12">
+                    <div class="connector-info">
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scriptblock %}
+<script>
+$(document).ready(function () {
+    $.get("{% url 'connectors:api_list' %}",
+            function (data, status) {
+                for (var idx in data) {
+                    var buttonTag = $('<button/>');
+                    buttonTag.addClass('btn btn-con form-control')
+                            .html(data[idx].conn_name)
+                            .on('click',
+                                {
+                                    conn_name: data[idx].conn_name,
+                                    idx: idx
+                                },
+                                function (event) {
+                                    $('#conn-select').attr('href', '{% url "datasets:query" %}' + '?conn_name=' + event.data.conn_name);
+                                    $('#conn-select').val('disabled', 'false');
+                                    $('.btn-con').removeAttr('style');
+                                    $(this).attr('style','background:lightblue');
+                                    $('.connector-info').empty();
+                                    for (var info in data[event.data.idx]) {
+                                        var pTag = $('<p/>');
+                                        pTag.html(info + ':&nbsp;' + data[idx][info]);
+                                        $('.connector-info').append(pTag);
+                                    }
+                                });
+                    $('.connector-list').append(buttonTag);
+                }
+            }
+    );
+});
+</script>
+{% endblock %}

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load i18n %}
+{% load staticfiles %}
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <link rel="icon" type="image/png" href="{% static 'favicon.ico' %}">
+    <!--     Fonts and icons     -->
+    <link href="{% static 'css/themify-icons.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <!-- CSS Files -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/light-bootstrap-dashboard.css' %}" rel="stylesheet" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="{% static 'assets/css/demo.css' %}" rel="stylesheet" />
+    <title>{% block head %}Base{% endblock %}</title>
+    {% block linkblock %}{% endblock %}
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="sidebar" data-color="orange" data-image="{% static 'assets/img/sidebar-4.jpg' %}">
+            <div class="sidebar-wrapper">
+                <div class="logo">
+                    <a href="#" class="simple-text">
+                        Discovery
+                    </a>
+                </div>
+
+                <ul class="nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item {% block datasets_active %}{% endblock %}">
+                        <a class="nav-link" href="{% url 'datasets:list' %}">
+                            <span data-feather="layers">
+                                <i class="ti-package"></i>Data Set
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% block connectors_active %}{% endblock %}">
+                        <a class="nav-link" href="{% url 'connectors:list' %}">
+                            <span data-feather="layers">
+                                <i class="ti-link"></i>Connector
+                            </span>
+                        </a>
+                    </li>
+                    {% else %}
+                        <div class="card-plain">
+                            <div class="card-header">
+                                <h4>User Login</h4>
+                            </div>
+                            <div class="card-body">
+                                <p>Please input username and password:</p>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <input type="submit" value="login" class="btn btn-primary">
+                                    <a href="{% url 'accounts:register' %}" class="btn btn-info">register</a>
+                                </form>
+                            </div>
+                        </div>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="main-panel">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg " color-on-scroll="500">
+                <div class=" container-fluid  ">
+                    {% if user.is_authenticated %}
+                        {% block nav-title %} main {% endblock %}
+                    <button href="" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse">
+                        <span class="navbar-toggler-bar burger-lines"></span>
+                        <span class="navbar-toggler-bar burger-lines"></span>
+                        <span class="navbar-toggler-bar burger-lines"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navigation">
+                        {% block navbar %}{% endblock %}
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-toggle="dropdown">
+                                    <i class="ti-user"></i>&nbsp;
+                                    <span class="d-lg-block">{{ user.username }}</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="{% url 'accounts:view_profile' %}">
+                                        <i class="fa fa-id-card"></i>&nbsp;{% trans 'User Profile' %}
+                                    </a>
+                                    <a class="dropdown-item" href="{% url 'accounts:edit_profile' %}">
+                                        <i class="fa fa-edit"></i>&nbsp;{% trans 'Edit User' %}
+                                    </a>
+                                    <a class="dropdown-item" href="{% url 'accounts:change_password' %}">
+                                        <i class="fa fa-ellipsis-h"></i>&nbsp;{% trans 'Change Password' %}
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'accounts:logout' %}" class="nav-link">
+                                    <i class="fa fa-sign-out"></i>
+                                    <span class="d-lg-none">Logout</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    {% else %}
+                        <button href="" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse">
+                            <span class="navbar-toggler-bar burger-lines"></span>
+                            <span class="navbar-toggler-bar burger-lines"></span>
+                            <span class="navbar-toggler-bar burger-lines"></span>
+                        </button>
+                        <div class="collapse navbar-collapse justify-content-end" id="navigation">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a href="{% url 'accounts:register' %}" class="nav-link">
+                                        <i class="fa fa-user-plus"></i>
+                                        <span class="d-lg-none">{% trans 'Register' %}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    {% endif %}
+                </div>
+            </nav>
+            <!-- End Navbar -->
+            <div class="content">
+                <div class="container-fluid">
+                    {% block body %}
+                        <h1>Base</h1>
+                    {% endblock %}
+                </div>
+            </div>
+            <footer class="footer">
+                <div class="container">
+                    <nav>
+                        <p class="copyright text-center">
+                            ©
+                            <script>
+                                document.write(new Date().getFullYear())
+                            </script>
+                            powered by Discovery
+                        </p>
+                    </nav>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+<!--   Core JS Files   -->
+<script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/js/core/popper.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/js/core/bootstrap.min.js' %}" type="text/javascript"></script>
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="{% static 'assets/js/plugins/bootstrap-switch.js' %}"></script>
+<!--  Google Maps Plugin    -->
+{#<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>#}
+<!--  Chartist Plugin  -->
+<script src="{% static 'assets/js/plugins/chartist.min.js' %}"></script>
+<!--  Notifications Plugin    -->
+<script src="{% static 'assets/js/plugins/bootstrap-notify.js' %}"></script>
+<!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
+<script src="{% static 'assets/js/light-bootstrap-dashboard.js' %}" type="text/javascript"></script>
+<!-- Light Bootstrap Dashboard DEMO methods, don't include it in your project! -->
+<script src="{% static 'assets/js/demo.js' %}"></script>
+<!-- Custom Script -->
+{% block scriptblock %}{% endblock %}
+
+</body>
+
+</html>

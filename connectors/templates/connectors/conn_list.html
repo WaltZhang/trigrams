@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block linkblock %}
+    <link href="{% static 'datasets/css/ds-table.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block head %}Connectors{% endblock %}
+
+{% block connectors_active %}active{% endblock %}
+
+{% block nav-title %}<h3>Connectors</h3>{% endblock %}
+
+{% block navbar %}
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item">
+            <a href="{% url 'connectors:create' %}" class="nav-link btn btn-primary">
+                <i class="ti-plus"></i>&nbsp;
+                <span class="d-lg-block">{% trans 'New' %}</span>
+            </a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-sm-12 col-md-8">
+        {% for conn in connection_list %}
+        <div class="card card-tasks">
+            <div class="card-header">
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-info alert-with-icon">
+                            <span class="fa fa-database" data-notify="icon"></span>
+                            <span>{{ conn.conn_name }}</span>
+                            <a href="{% url 'connectors:update' conn.pk %}" class="close">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <hr>
+                <div class="stats">
+                    <i class="now-ui-icons loader_refresh spin"></i>
+                    Updated: {{ conn.updated }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <div class="tab-content">
+            {% for conn in connection_list %}
+            <div class="tab-pane fade" id="detail_{{ conn.id }}">
+                Uri: {{ conn.uri }} <br>
+                User: {{ conn.user }} <br>
+                Database: {{ conn.db_instance }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div  class="col-4"></div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block head %}Delete Confirm{% endblock %}
+
+{% block nav-title %}<h3>Confirm</h3>{% endblock %}
+{% block body %}
+<form method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object.display_name }}"?</p>
+    <input type="submit" value="Confirm" class="btn btn-danger" />
+    <a href="javascript:history.back()" class="btn btn-default">Back</a>
+</form>
+{% endblock %}

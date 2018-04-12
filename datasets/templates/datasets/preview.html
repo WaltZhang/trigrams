@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block head %}Preview{% endblock %}
+
+{% block nav-title %}<h3>Preview</h3>{% endblock %}
+
+{% block linkblock %}
+<link href="{% static 'datasets/css/ds-table.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block navbar %}
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item">
+            <a href="javascript:;" onclick="$('#save_form').submit()" class="nav-link btn btn-success">
+                <i class="ti-save"></i>
+                {% trans 'Save' %}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'datasets:cancel' %}?file_name={{ file_name }}" class="nav-link btn btn-default">{% trans 'Cancel' %}</a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block body %}
+<div class="card">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'datasets:import' %}">Type</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'datasets:upload' %}">Upload</a></li>
+            <li class="breadcrumb-item">Preview</li>
+        </ol>
+    </nav>
+    <div class="card-body">
+        <form id="save_form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="name" id="file_name" value="{{ file_name }}">
+            <input type="hidden" name="schema" id="schema">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="display_name">Name</label>
+                        <input type="text" name="display_name" id="display_name" class="form-control" value="{{ display_name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="sep">Delimiter</label>
+                        <input type="text" name="sep" id="sep" class="form-control" value="{{ sep }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" name="description" id="description" class="form-control" value="{{ description }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="encoding">Encoding</label>
+                        <input type="text" name="encoding" id="encoding" class="form-control" value="{{ encoding }}">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col" style="overflow-x:auto;height: calc(100vh/2)">
+        <table class="ds-table table table-striped">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+    <br>
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-10">
+                        <h5>Column Type</h5>
+                    </div>
+                    <div class="col-2">
+                        <a class="nav-link" data-toggle="dropdown">
+                            <i class="ti-menu"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-left">
+                            <a class="dropdown-item" href="#">object</a>
+                            <a class="dropdown-item" href="#">int64</a>
+                            <a class="dropdown-item" href="#">date</a>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-8" id="col-name"></div>
+                    <div class="col-4" id="col-type"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="stats"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scriptblock %}
+<script src="{% static 'datasets/js/ds-table.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $('table tbody').on('mouseover mouseleave click', "td", function(e) {
+            if (e.type == 'mouseover') {
+                $("colgroup").eq($(this).index()).addClass("hover");
+            }
+            else if(e.type == 'mouseleave') {
+                $("colgroup").eq($(this).index()).removeClass("hover");
+            }
+            else {
+                $("colgroup").removeClass("selected");
+                $("th").removeClass("first");
+                $("td").removeClass("last");
+                $("colgroup").eq($(this).index()).addClass("selected");
+                $("th").eq($(this).index()).addClass("first");
+                $("tr:last td").eq($(this).index()).last().addClass("last");
+                var schema = JSON.parse($('#schema').val());
+                var col = $("tr th").eq($(this).index()).html();
+                $('#col-name').html(col);
+                $('#col-type').html(schema[col]);
+            }
+        });
+
+        $.get("{% url 'datasets:api_preview' %}",
+            { "file_name": $('#file_name').val() },
+            function(data, status){
+                $('input#schema').val(JSON.parse(data.schema));
+                addColGroup(data.columns, $('table'));
+                buildTableHeader(data.columns, $('table thead'));
+                buildTableBody(data.sample, $('table tbody'));
+            }
+        );
+
+        $('input#sep, input#encoding').change(function(){
+            $.get("{% url 'datasets:api_preview' %}",
+                {
+                    "file_name": $('#file_name').val(),
+                    "sep": $('#sep').val(),
+                    "encoding": $('#encoding').val(),
+                    "columns": $('#columns').val(),
+                    "description": $('#description').val()
+                },
+                function(data, status) {
+                    resetTable($('table'));
+                    addColGroup(data.columns, $('table'));
+                    buildTableHeader(data.columns, $('table thead'));
+                    buildTableBody(data.sample, $('table tbody'));
+                });
+        });
+    });
+</script>
+{% endblock %}

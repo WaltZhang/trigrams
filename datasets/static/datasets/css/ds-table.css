@@ -1,0 +1,23 @@
+.ds-table {
+    border-collapse: collapse;
+}
+
+.ds-table .td, .ds-table .th { border: 0.5px solid #eee; }
+
+.ds-table th {
+    background: #ccf;
+}
+.ds-table .hover {
+    background-color: #eee;
+}
+.ds-table .selected {
+    border-left: 1px solid lightseagreen;
+    border-right: 1px solid lightseagreen;
+    background-color: lightskyblue;
+}
+.ds-table .first {
+    border-top: 1px solid lightseagreen;
+}
+.ds-table .last {
+    border-bottom: 1px solid lightseagreen;
+}

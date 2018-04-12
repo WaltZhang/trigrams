@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block head %}Data sets{% endblock %}
+
+{% block nav-title %}<h3>Data&nbsp;sets</h3>{% endblock %}
+
+{% block datasets_active %}active{% endblock %}
+
+{% block navbar %}
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item">
+            <a href="{% url 'datasets:import' %}" class="nav-link btn btn-primary">
+                <i class="ti-plus"></i>&nbsp;
+                <span class="d-lg-block">{% trans 'New' %}</span>
+            </a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle btn" href="#" id="searchDropdown" data-toggle="dropdown">
+                <i class="ti-search"></i>&nbsp;
+                <span class="d-lg-block">{% trans 'Search' %}</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <div class="ml-2 mr-2 mt-1 mb-1">
+                <input type="text" class="form-control" placeholder="Search...">
+                </div>
+            </div>
+        </li>
+    </ul>
+{% endblock %}
+{% block body %}
+    <div class="row">
+    {% for dataset in dataset_list %}
+    <div class="col-sm-12 col-md-6 col-xl-4">
+        <div class="card card-stats">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-5">
+                            <div class="icon-big icon-warning text-center">
+                                {% if dataset.external %}
+                                <i class="ti-harddrives"></i>
+                                {% else %}
+                                <i class="ti-package"></i>
+                                {% endif %}
+                            </div>
+                    </div>
+                    <div class="col-7">
+                        <a href="{% url 'datasets:detail' dataset.id %}">
+                            <h3>
+                                {{ dataset.display_name }}
+                            </h3>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>&nbsp;{{ dataset.description }}</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="stats">
+                                Created: {{ dataset.timestamp }}
+                            </div>
+                        </div>
+                        <div class="col-10"></div>
+                        <div class="col-1">
+                            <div class="stats">
+                                <a href="{% url 'datasets:delete' dataset.id %}">
+                                    <div class="icon-danger">
+                                    <i class="ti-trash"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+{% endblock %}
+
+{% block scriptblock %}
+{% endblock %}
