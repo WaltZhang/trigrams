@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext
 from django.contrib.auth.forms import forms
-from .utils import create_engine
+from .utils import create_connection
 
 from .models import Connector
 
@@ -21,11 +21,11 @@ class CreateConnectorForm(forms.ModelForm):
         'class': 'form-control',
         'placeholder': ugettext('Port'),
     }))
-    user = forms.CharField(label=ugettext('User'), widget=forms.TextInput(attrs={
+    user = forms.CharField(label=ugettext('User'), required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': ugettext('User'),
     }))
-    password = forms.CharField(label=ugettext('Password'), widget=forms.PasswordInput(attrs={
+    password = forms.CharField(label=ugettext('Password'), required=False, widget=forms.PasswordInput(attrs={
         'class': 'form-control',
         'placeholder': ugettext('Password'),
     }))
@@ -37,12 +37,12 @@ class CreateConnectorForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         try:
-            create_engine(cleaned_data.get('db_type'),
-                          cleaned_data.get('user'),
-                          cleaned_data.get('password'),
-                          cleaned_data.get('host'),
-                          cleaned_data.get('port'),
-                          cleaned_data.get('db_instance'))
+            create_connection(cleaned_data.get('db_type'),
+                              cleaned_data.get('user'),
+                              cleaned_data.get('password'),
+                              cleaned_data.get('host'),
+                              cleaned_data.get('port'),
+                              cleaned_data.get('db_instance'))
         except:
             raise forms.ValidationError(
                 ugettext('Can not connect to database with settings, please recheck settings again.'),
@@ -66,11 +66,11 @@ class UpdateConnectorForm(forms.ModelForm):
         'class': 'form-control',
         'placeholder': ugettext('Port'),
     }))
-    user = forms.CharField(label=ugettext('User'), widget=forms.TextInput(attrs={
+    user = forms.CharField(label=ugettext('User'), required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': ugettext('User'),
     }))
-    password = forms.CharField(label=ugettext('Password'), widget=forms.PasswordInput(attrs={
+    password = forms.CharField(label=ugettext('Password'), required=False, widget=forms.PasswordInput(attrs={
         'class': 'form-control',
         'placeholder': ugettext('Password'),
     }))
@@ -82,12 +82,12 @@ class UpdateConnectorForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         try:
-            create_engine(cleaned_data.get('db_type'),
-                          cleaned_data.get('user'),
-                          cleaned_data.get('password'),
-                          cleaned_data.get('host'),
-                          cleaned_data.get('port'),
-                          cleaned_data.get('db_instance'))
+            create_connection(cleaned_data.get('db_type'),
+                              cleaned_data.get('user'),
+                              cleaned_data.get('password'),
+                              cleaned_data.get('host'),
+                              cleaned_data.get('port'),
+                              cleaned_data.get('db_instance'))
         except:
             raise forms.ValidationError(
                 ugettext('Can not connect to database with settings, please recheck settings again.'),

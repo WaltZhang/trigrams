@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from sqlalchemy.exc import DBAPIError
 
-from connectors.utils import create_engine
+from connectors.utils import create_connection
 from trigrams import settings
 from connectors.models import Connector
 from .models import Dataset
@@ -93,8 +93,8 @@ class DataDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(DataDetailView, self).get_context_data(**kwargs)
         if self.object.external:
-            engine = self.create_engine_from_connector()
-            columns, content, dtype, count = SourceParser.query_sql(self.object.query_string, engine)
+            connection = self.create_connection_from_connector()
+            columns, content, dtype, count = SourceParser.query_sql(self.object.query_string, connection)
         else:
             columns, content, dtype, count = SourceParser.read_csv(self.object.name,
                                                                    sep=self.object.sep,
@@ -104,15 +104,15 @@ class DataDetailView(LoginRequiredMixin, DetailView):
         context['total_count'] = count
         return context
 
-    def create_engine_from_connector(self):
+    def create_connection_from_connector(self):
         connector = self.object.connector
         try:
-            return create_engine(db_type=connector.db_type,
-                                   host=connector.host,
-                                   port=connector.port,
-                                   user=connector.user,
-                                   password=connector.password,
-                                   db_instance=connector.db_instance)
+            return create_connection(db_type=connector.db_type,
+                                     host=connector.host,
+                                     port=connector.port,
+                                     user=connector.user,
+                                     password=connector.password,
+                                     db_instance=connector.db_instance)
         except DBAPIError as err:
             print(err.args)
 

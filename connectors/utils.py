@@ -9,7 +9,7 @@ DB_TYPETO_PROTOCOL = {
 }
 
 
-def create_engine(db_type, user, password, host, port, db_instance):
+def create_connection(db_type, user, password, host, port, db_instance):
     protocol = DB_TYPETO_PROTOCOL.get(db_type)
     url = "{}://{}:{}@{}:{}/{}".format(protocol,
                                        user,
@@ -18,4 +18,5 @@ def create_engine(db_type, user, password, host, port, db_instance):
                                        port,
                                        db_instance)
     engine = sqlalchemy.create_engine(url)
-    return engine
+    connection = engine.connect()
+    return connection
