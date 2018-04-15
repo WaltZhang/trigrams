@@ -58,7 +58,6 @@
             {% for conn in connection_list %}
             <div class="tab-pane fade" id="detail_{{ conn.id }}">
                 Uri: {{ conn.uri }} <br>
-                User: {{ conn.user }} <br>
                 Database: {{ conn.db_instance }}
             </div>
             {% endfor %}

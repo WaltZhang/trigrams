@@ -7,6 +7,6 @@ from .serializers import ConnectorSerializer
 
 class ConnectorAPIView(APIView):
     def get(self, request):
-        connectors = Connector.objects.all()
+        connectors = Connector.objects.filter(owner=request.user)
         serializer = ConnectorSerializer(connectors, many=True)
         return Response(data=serializer.data)

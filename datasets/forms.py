@@ -15,7 +15,6 @@ class PreviewForm(forms.ModelForm):
     class Meta:
         model = Dataset
         fields = [
-            'name',
             'display_name',
             'description',
             'sep',
@@ -28,7 +27,6 @@ class QueryForm(forms.ModelForm):
     class Meta:
         model = Dataset
         fields = [
-            'name',
             'display_name',
             'description',
             'query_string',

@@ -14,7 +14,7 @@ from .serializers import PreviewSerializer
 class PreviewAPIView(APIView):
 
     def get(self, request):
-        file_name = request.GET.get('file_name')
+        file_name = request.GET.get('display_name')
         sep = request.GET.get('sep', ',')
         encoding = request.GET.get('encoding', 'utf-8')
 
@@ -36,7 +36,7 @@ class QueryAPIView(APIView):
             connection = create_connection(db_type=connector.db_type,
                                            host=connector.host,
                                            port=connector.port,
-                                           user=connector.user,
+                                           user=connector.username,
                                            password=connector.password,
                                            db_instance=connector.db_instance)
         except DBAPIError as err:

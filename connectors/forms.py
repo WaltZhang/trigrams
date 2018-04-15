@@ -21,9 +21,9 @@ class CreateConnectorForm(forms.ModelForm):
         'class': 'form-control',
         'placeholder': ugettext('Port'),
     }))
-    user = forms.CharField(label=ugettext('User'), required=False, widget=forms.TextInput(attrs={
+    username = forms.CharField(label=ugettext('Username'), required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': ugettext('User'),
+        'placeholder': ugettext('Username'),
     }))
     password = forms.CharField(label=ugettext('Password'), required=False, widget=forms.PasswordInput(attrs={
         'class': 'form-control',
@@ -38,7 +38,7 @@ class CreateConnectorForm(forms.ModelForm):
         cleaned_data = super().clean()
         try:
             create_connection(cleaned_data.get('db_type'),
-                              cleaned_data.get('user'),
+                              cleaned_data.get('username'),
                               cleaned_data.get('password'),
                               cleaned_data.get('host'),
                               cleaned_data.get('port'),
@@ -51,7 +51,15 @@ class CreateConnectorForm(forms.ModelForm):
 
     class Meta:
         model = Connector
-        fields = '__all__'
+        fields = [
+            'conn_name',
+            'db_type',
+            'host',
+            'port',
+            'username',
+            'password',
+            'db_instance',
+        ]
 
 
 class UpdateConnectorForm(forms.ModelForm):
@@ -66,9 +74,9 @@ class UpdateConnectorForm(forms.ModelForm):
         'class': 'form-control',
         'placeholder': ugettext('Port'),
     }))
-    user = forms.CharField(label=ugettext('User'), required=False, widget=forms.TextInput(attrs={
+    username = forms.CharField(label=ugettext('Username'), required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': ugettext('User'),
+        'placeholder': ugettext('Username'),
     }))
     password = forms.CharField(label=ugettext('Password'), required=False, widget=forms.PasswordInput(attrs={
         'class': 'form-control',
@@ -83,7 +91,7 @@ class UpdateConnectorForm(forms.ModelForm):
         cleaned_data = super().clean()
         try:
             create_connection(cleaned_data.get('db_type'),
-                              cleaned_data.get('user'),
+                              cleaned_data.get('username'),
                               cleaned_data.get('password'),
                               cleaned_data.get('host'),
                               cleaned_data.get('port'),
@@ -100,7 +108,7 @@ class UpdateConnectorForm(forms.ModelForm):
             'db_type',
             'host',
             'port',
-            'user',
+            'username',
             'password',
             'db_instance',
         ]

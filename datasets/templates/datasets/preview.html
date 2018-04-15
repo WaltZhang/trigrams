@@ -19,7 +19,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{% url 'datasets:cancel' %}?file_name={{ file_name }}" class="nav-link btn btn-default">{% trans 'Cancel' %}</a>
+            <a href="{% url 'datasets:cancel' %}?file_name={{ display_name }}" class="nav-link btn btn-default">{% trans 'Cancel' %}</a>
         </li>
     </ul>
 {% endblock %}
@@ -36,7 +36,7 @@
     <div class="card-body">
         <form id="save_form" method="post">
             {% csrf_token %}
-            <input type="hidden" name="name" id="file_name" value="{{ file_name }}">
+{#            <input type="hidden" name="file_name" id="file_name" value="{{ file_name }}">#}
             <input type="hidden" name="schema" id="schema">
             <div class="row">
                 <div class="col-md-6 col-sm-12">
@@ -136,7 +136,7 @@
         });
 
         $.get("{% url 'datasets:api_preview' %}",
-            { "file_name": $('#file_name').val() },
+            { "display_name": $('#display_name').val() },
             function(data, status){
                 $('input#schema').val(JSON.parse(data.schema));
                 addColGroup(data.columns, $('table'));
@@ -148,7 +148,7 @@
         $('input#sep, input#encoding').change(function(){
             $.get("{% url 'datasets:api_preview' %}",
                 {
-                    "file_name": $('#file_name').val(),
+                    "display_name": $('#display_name').val(),
                     "sep": $('#sep').val(),
                     "encoding": $('#encoding').val(),
                     "columns": $('#columns').val(),

@@ -9,15 +9,16 @@ from .forms import RegistrationForm, ProfileChangeForm
 
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'accounts/home.html'
-    login_url = reverse_lazy('datasets:list')
+    login_url = reverse_lazy('accounts:login')
 
 
-class RegisterView(CreateView):
+class RegisterView(LoginRequiredMixin, CreateView):
     template_name = 'accounts/reg_form.html'
+    login_url = reverse_lazy('accounts:login')
     form_class = RegistrationForm
 
     def get_success_url(self):
-        return reverse('accounts:home')
+        return reverse('accounts:login')
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
@@ -26,7 +27,7 @@ class ProfileView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self):
         context = super().get_context_data()
-        context['user'] = self.request.user
+        context['owner'] = self.request.user
         return context
 
 

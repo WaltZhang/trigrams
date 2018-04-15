@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -14,9 +15,10 @@ class Connector(models.Model):
     db_type = models.CharField(max_length=10, choices=DB_TYPES)
     host = models.CharField(max_length=200)
     port = models.IntegerField()
-    user = models.CharField(max_length=20, blank=True)
+    username = models.CharField(max_length=20, blank=True)
     password = models.CharField(max_length=256, blank=True)
     db_instance = models.CharField(max_length=20)
+    owner = models.ForeignKey(User)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 

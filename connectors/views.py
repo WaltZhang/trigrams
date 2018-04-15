@@ -12,7 +12,7 @@ class ConnectorListView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('accounts:login')
 
     def get_queryset(self):
-        return Connector.objects.all()
+        return Connector.objects.filter(owner=self.request.user)
 
 
 class CreateConnectorView(LoginRequiredMixin, CreateView):
@@ -22,6 +22,12 @@ class CreateConnectorView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('connectors:list')
+
+    def form_valid(self, form):
+        connector = form.save(commit=False)
+        connector.owner = self.request.user
+        connector.save()
+        return super(CreateConnectorView, self).form_valid(form)
 
 
 class UpdateConnectorView(LoginRequiredMixin, UpdateView):

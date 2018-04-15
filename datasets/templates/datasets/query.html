@@ -30,15 +30,14 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'datasets:import' %}">Type</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'datasets:upload' %}">Upload</a></li>
-                    <li class="breadcrumb-item">Preview</li>
+                    <li class="breadcrumb-item"><a href="{% url 'datasets:connector' %}">Connector</a></li>
+                    <li class="breadcrumb-item">Query</li>
                 </ol>
             </nav>
         </div>
         <div class="card-body">
             <form id="save_form" method="post">
                 {% csrf_token %}
-                <input type="hidden" id="name" name="name" value="{{ name }}">
                 <input type="hidden" id="conn_name" value="{{ conn_name }}">
                 <input type="hidden" name="schema" id="schema">
                 <div class="row">
@@ -50,7 +49,7 @@
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group">
                             <label for="display_name">Name</label>
-                            <input type="text" name="display_name" id="display_name" class="form-control" value="{{ name }}">
+                            <input type="text" name="display_name" id="display_name" class="form-control" value="{{ display_name }}">
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
