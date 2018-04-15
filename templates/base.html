@@ -47,20 +47,19 @@
                         </a>
                     </li>
                     {% else %}
-                        <div class="card-plain">
-                            <div class="card-header">
-                                <h4>User Login</h4>
-                            </div>
-                            <div class="card-body">
-                                <p>Please input username and password:</p>
-                                <form method="post">
-                                    {% csrf_token %}
-                                    {{ form.as_p }}
-                                    <input type="submit" value="login" class="btn btn-primary">
-                                    <a href="{% url 'accounts:register' %}" class="btn btn-info">register</a>
-                                </form>
-                            </div>
+                    <div class="card-plain">
+                        <div class="card-header">
+                            <h4>User Login</h4>
                         </div>
+                        <div class="card-body">
+                            <p>Please input username and password:</p>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button class="btn btn-primary">{% trans 'login' %}</button>
+                            </form>
+                        </div>
+                    </div>
                     {% endif %}
                 </ul>
             </div>
@@ -81,7 +80,7 @@
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-toggle="dropdown">
-                                    <i class="fa fa-user"></i>&nbsp;
+                                    <i class="ti-user"></i>&nbsp;
                                     <span class="d-lg-block">{{ user.username }}</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
@@ -97,9 +96,15 @@
                                 </div>
                             </li>
                             <li class="nav-item">
+                                <a href="{% url 'accounts:register' %}" class="nav-link">
+                                    <i class="fa fa-user-plus"></i>
+                                    <span class="d-lg-none">{% trans 'Register' %}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{% url 'accounts:logout' %}" class="nav-link">
                                     <i class="fa fa-sign-out"></i>
-                                    <span class="d-lg-none">Logout</span>
+                                    <span class="d-lg-none">{% trans 'Logout' %}</span>
                                 </a>
                             </li>
                         </ul>
@@ -113,10 +118,6 @@
                         <div class="collapse navbar-collapse justify-content-end" id="navigation">
                             <ul class="navbar-nav ml-auto">
                                 <li class="nav-item">
-                                    <a href="{% url 'accounts:register' %}" class="nav-link">
-                                        <i class="fa fa-user-plus"></i>
-                                        <span class="d-lg-none">{% trans 'Register' %}</span>
-                                    </a>
                                 </li>
                             </ul>
                         </div>

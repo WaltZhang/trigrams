@@ -3,7 +3,7 @@ from connectors.models import Connector
 
 
 class Dataset(models.Model):
-    name = models.CharField(max_length=256)
+    name = models.CharField(primary_key=True, max_length=256)
     display_name = models.CharField(max_length=256)
     description = models.TextField(blank=True)
     schema = models.TextField()

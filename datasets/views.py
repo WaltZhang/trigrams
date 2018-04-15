@@ -1,4 +1,5 @@
 import os, uuid
+from datetime import datetime
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView, ListView, FormView
 from django.views.generic.base import RedirectView
@@ -33,7 +34,7 @@ class DataImportView(LoginRequiredMixin, FormView):
         return super(DataImportView, self).form_valid(form)
 
     def save_uploaded_file(self, f):
-        self.file_name = str(uuid.uuid5(uuid.NAMESPACE_DNS, 'djangoproject.com'))
+        self.file_name = str(uuid.uuid5(uuid.NAMESPACE_DNS, str(datetime.now())))
         with open(os.path.join(settings.MEDIA_ROOT, self.file_name), 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
@@ -128,7 +129,7 @@ class QueryView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(QueryView, self).get_context_data(**kwargs)
         context['conn_name'] = self.request.GET.get('conn_name')
-        context['name'] = self.request.GET.get('name') if 'name' in self.request.GET else str(uuid.uuid5(uuid.NAMESPACE_DNS, 'djangoproject.com'))
+        context['name'] = self.request.GET.get('name') if 'name' in self.request.GET else str(uuid.uuid5(uuid.NAMESPACE_DNS, str(datetime.now())))
         return context
 
     def form_valid(self, form):

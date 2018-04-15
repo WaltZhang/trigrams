@@ -6,7 +6,6 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    {% trans '注册' as button_title %}
-    <input type="submit" value="{% blocktrans %}{{ button_title }}{% endblocktrans %}" class="btn btn-info">
+    <button class="btn btn-info">{% trans 'register' %}</button>
 </form>
 {% endblock %}
