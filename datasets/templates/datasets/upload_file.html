@@ -25,7 +25,7 @@
                     <p>Please upload csv or excel file:</p>
                     {% csrf_token %}
                     <div class="form-group">
-                        <input type="file" name="file" id="file" class="form-control">
+                        <input type="file" name="file" id="file" class="form-control" accept=".csv, .txt, .xls, .xlsx">
                     </div>
                     <button class="btn btn-primary">{% trans 'Upload' %}</button>
                 </form>

@@ -77,13 +77,18 @@ class DataImportView(LoginRequiredMixin, FormView):
         return super(DataImportView, self).form_valid(form)
 
     def save_uploaded_file(self, f):
+        self.display_name, self.extension = os.path.splitext(f.name)
         self.file_name = str(uuid.uuid5(uuid.NAMESPACE_DNS, str(datetime.now())))
         with open(os.path.join(settings.MEDIA_ROOT, self.file_name), 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
 
     def get_success_url(self):
-        return reverse('datasets:preview') + '?file_name=' + self.file_name
+        self.extension = self.extension.lower()
+        if self.extension == '.txt':
+            self.extension = '.csv'
+        return reverse('datasets:preview') + '?file_name=' + self.file_name\
+               + '&display_name=' + self.display_name + '&extension=' + self.extension
 
 
 class ImportCancelView(LoginRequiredMixin, RedirectView):
@@ -107,13 +112,16 @@ class PreviewView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(PreviewView, self).get_context_data(**kwargs)
-        context['display_name'] = self.request.GET.get('display_name')\
-            if self.request.GET.get('display_name') is not None\
-            else self.request.GET.get('file_name')
-        context['sep'] = self.request.GET.get('sep', ',')
+        context['display_name'] = self.request.GET.get('display_name')
+        context['file_name'] = self.request.GET.get('file_name')
         context['dtype'] = self.request.GET.get('dtype')
         context['encoding'] = self.request.GET.get('encoding', 'utf-8')
         context['description'] = self.request.GET.get('description', '')
+        if self.request.GET.get('extension') == '.csv':
+            context['sep'] = self.request.GET.get('sep', ',')
+        else:
+            context['sheet_name'] = self.request.GET.get('sheet_name')
+        context['extension'] = self.request.GET.get('extension')
         return context
 
     def form_valid(self, form):

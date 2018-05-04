@@ -11,6 +11,7 @@ class Dataset(models.Model):
     owner = models.ForeignKey(User)
     sep = models.CharField(max_length=3, blank=True)
     external = models.BooleanField(default=False)
+    dataset_type = models.CharField(max_length=10)
     encoding = models.CharField(max_length=20, blank=True)
     connector = models.ForeignKey(Connector, on_delete=models.CASCADE, blank=True, null=True)
     query_string = models.TextField(blank=True)

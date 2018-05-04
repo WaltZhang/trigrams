@@ -38,6 +38,7 @@
             {% csrf_token %}
 {#            <input type="hidden" name="file_name" id="file_name" value="{{ file_name }}">#}
             <input type="hidden" name="schema" id="schema">
+            <input type="hidden" name="extension" id="extension">
             <div class="row">
                 <div class="col-md-6 col-sm-12">
                     <div class="form-group">
@@ -45,8 +46,13 @@
                         <input type="text" name="display_name" id="display_name" class="form-control" value="{{ display_name }}">
                     </div>
                     <div class="form-group">
+                        {% if sep %}
                         <label for="sep">Delimiter</label>
                         <input type="text" name="sep" id="sep" class="form-control" value="{{ sep }}">
+                        {% else %}
+                        <label for="sheet_name">Sheet name</label>
+                        <input type="text" name="sheet_name" id="sheet_name" class="form-control" value="{{ sheet_name }}">
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-md-6 col-sm-12">
@@ -136,7 +142,10 @@
         });
 
         $.get("{% url 'datasets:api_preview' %}",
-            { "display_name": $('#display_name').val() },
+            {
+                "display_name": $('#display_name').val(),
+                "extension": $('#extension').val()
+            },
             function(data, status){
                 $('input#schema').val(JSON.parse(data.schema));
                 addColGroup(data.columns, $('table'));

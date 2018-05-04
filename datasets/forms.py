@@ -17,7 +17,6 @@ class PreviewForm(forms.ModelForm):
         fields = [
             'display_name',
             'description',
-            'sep',
             'encoding',
             'schema',
         ]
