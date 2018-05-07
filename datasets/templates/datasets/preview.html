@@ -36,9 +36,9 @@
     <div class="card-body">
         <form id="save_form" method="post">
             {% csrf_token %}
-{#            <input type="hidden" name="file_name" id="file_name" value="{{ file_name }}">#}
+            <input type="hidden" name="file_name" id="file_name" value="{{ file_name }}">
             <input type="hidden" name="schema" id="schema">
-            <input type="hidden" name="extension" id="extension">
+            <input type="hidden" name="extension" id="extension" value="{{ extension }}">
             <div class="row">
                 <div class="col-md-6 col-sm-12">
                     <div class="form-group">
@@ -143,6 +143,7 @@
 
         $.get("{% url 'datasets:api_preview' %}",
             {
+                "file_name": $('#file_name').val(),
                 "display_name": $('#display_name').val(),
                 "extension": $('#extension').val()
             },
