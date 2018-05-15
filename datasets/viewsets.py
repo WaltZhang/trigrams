@@ -14,6 +14,10 @@ from .models import Table
 from .serializers import PreviewSerializer
 
 
+def json_output(o):
+    return str(o)
+
+
 class PreviewAPIView(APIView):
 
     def get(self, request):
@@ -38,9 +42,10 @@ class PreviewAPIView(APIView):
             except XLRDError as err:
                 print(err.args)
                 Response(status=status.HTTP_400_BAD_REQUEST)
-        schema = json.dumps(dict(zip(columns, dtype)))
+        schema_dict = dict(zip(columns, dtype))
+        schema = json.dumps(schema_dict)
         serializer = PreviewSerializer(Table(columns=json.dumps(columns),
-                                             sample=json.dumps(content),
+                                             sample=json.dumps(content, default=json_output),
                                              schema=json.dumps(schema)))
         return Response(serializer.data)
 
@@ -61,7 +66,8 @@ class QueryAPIView(APIView):
             Response(status=status.HTTP_400_BAD_REQUEST)
 
         columns, content, dtype, count = SourceParser.query_sql(sql, connection)
-        schema = json.dumps(dict(zip(columns, dtype)))
+        schema_dict = dict(zip(columns, dtype))
+        schema = json.dumps(schema_dict, default=json_output)
         serializer = PreviewSerializer(Table(columns=json.dumps(columns),
                                              sample=json.dumps(content),
                                              schema=json.dumps(schema)))
