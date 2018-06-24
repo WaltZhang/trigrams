@@ -18,6 +18,7 @@ class PreviewForm(forms.ModelForm):
             'display_name',
             'description',
             'encoding',
+            'sep',
             'schema',
         ]
 

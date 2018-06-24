@@ -1,4 +1,4 @@
-import json
+import os, json
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,9 +8,14 @@ from pandas.io.parsers import CParserError
 
 from connectors.models import Connector
 from connectors.utils import create_connection
+from trigrams import settings
 from .utils import SourceParser
 from .models import Table
 from .serializers import PreviewSerializer
+
+
+def json_output(o):
+    return str(o)
 
 
 class PreviewAPIView(APIView):
@@ -31,13 +36,16 @@ class PreviewAPIView(APIView):
         else:
             sheet_name = request.GET.get('sheet_name', 0)
             try:
-                columns, content, dtype, count = SourceParser.read_excel(io=file_name, sheet_name=sheet_name)
+                file_path = os.path.join(settings.MEDIA_ROOT, self.request.GET.get('file_name'))
+                if os.path.exists(file_path):
+                    columns, content, dtype, count = SourceParser.read_excel(io=file_path, sheet_name=sheet_name)
             except XLRDError as err:
                 print(err.args)
                 Response(status=status.HTTP_400_BAD_REQUEST)
-        schema = json.dumps(dict(zip(columns, dtype)))
+        schema_dict = dict(zip(columns, dtype))
+        schema = json.dumps(schema_dict)
         serializer = PreviewSerializer(Table(columns=json.dumps(columns),
-                                             sample=json.dumps(content),
+                                             sample=json.dumps(content, default=json_output),
                                              schema=json.dumps(schema)))
         return Response(serializer.data)
 
@@ -58,7 +66,8 @@ class QueryAPIView(APIView):
             Response(status=status.HTTP_400_BAD_REQUEST)
 
         columns, content, dtype, count = SourceParser.query_sql(sql, connection)
-        schema = json.dumps(dict(zip(columns, dtype)))
+        schema_dict = dict(zip(columns, dtype))
+        schema = json.dumps(schema_dict, default=json_output)
         serializer = PreviewSerializer(Table(columns=json.dumps(columns),
                                              sample=json.dumps(content),
                                              schema=json.dumps(schema)))

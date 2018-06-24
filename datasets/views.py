@@ -60,7 +60,7 @@ class DataDetailView(LoginRequiredMixin, DetailView):
             return create_connection(db_type=connector.db_type,
                                      host=connector.host,
                                      port=connector.port,
-                                     user=connector.user,
+                                     user=connector.username,
                                      password=connector.password,
                                      db_instance=connector.db_instance)
         except DBAPIError as err:
