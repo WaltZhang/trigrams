@@ -158,6 +158,7 @@
         $('input#sep, input#encoding').change(function(){
             $.get("{% url 'datasets:api_preview' %}",
                 {
+                    "file_name": $('#file_name').val(),
                     "display_name": $('#display_name').val(),
                     "sep": $('#sep').val(),
                     "encoding": $('#encoding').val(),
